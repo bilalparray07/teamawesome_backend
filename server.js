@@ -9,14 +9,27 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
 server.use(function (req, res, next) {
+  // Allow all origins for general requests
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  next();
+
+  // Check for the specific route and allow the specific origin
+  if (req.url.startsWith('/api/players/')) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  }
+
+  // Allow preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
 });
+
 //// mongo url ///connection string
 const MONGO_DB_URI =
   "mongodb+srv://sorieasal:xb1ANl8yyAjecDeY@nodejs.3k8ji4v.mongodb.net/teamawesomesozeith";
